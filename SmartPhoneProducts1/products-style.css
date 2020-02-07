@@ -10,14 +10,12 @@ width: 200px;
 
 h1,h2 {
     text-align: center;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-around;
 }
 
 body > div {
 border: 5px solid black;
 display: flex;
+background-image: url(./images/phone_globe.jpg);
 }
 
 main {
