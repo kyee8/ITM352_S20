@@ -23,38 +23,52 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Smartphones Products</title>
     <link rel="stylesheet" href="./products-style.css">
+
+    <style id="localstyle"></style>       
 </head>
+
 <h1>
     Used Smart Phone Store
 </h1>
+
+<div>
+    <input id='speedSlider' type='range' min=".1" max="5" step=".1" style="direction"  
+    onchange="localStyle.innerHTML = '.rotate img {animation-duration: ' + speedSlider.value + 's;}';">
+</div>
+
 <body>
     <div>
         <main> 
-    <section class="item" id="HTC" onmouseover="HTC.className= 'item rotate';"> 
+    <section class="item" onmouseover="this.className= 'item rotate';"
+    onclick="this.className= 'item';">
         <h2>HTC</h2>
         <p><h2>&dollar;40.00</h2></p>
         <img src="http://dport96.github.io/ITM352/morea/080.flow-control-II/HTC.jpg">
     </section>
 
-    <section class="item"> 
+    <section class="item" onmouseover="this.className= 'item rotate';"
+    onclick="this.className= 'item';">
         <h2>Apple</h2>
         <p><h2>&dollar;75.00</h2></p>
         <img src="http://dport96.github.io/ITM352/morea/080.flow-control-II/iphone-3gs.jpg">
     </section>
 
-    <section class="item"> 
+    <section class="item" onmouseover="this.className= 'item rotate';"
+    onclick="this.className= 'item';"> 
         <h2>Nokia</h2>
         <p><h2>&dollar;35.00</h2></p>
         <img src="http://dport96.github.io/ITM352/morea/080.flow-control-II/Nokia.jpg">
     </section>
 
-    <section class="item"> 
+    <section class="item" onmouseover="this.className= 'item rotate';"
+    onclick="this.className= 'item';"> 
         <h2>Samsung</h2>
         <p><h2>&dollar;45.00</h2></p>
         <img src="http://dport96.github.io/ITM352/morea/080.flow-control-II/Samsung.jpg">
     </section>
 
-    <section class="item"> 
+    <section class="item" onmouseover="this.className= 'item rotate';"
+    onclick="this.className= 'item';"> 
         <h2>Blackberry</h2>
         <p><h2>&dollar;10.00</h2></p>
         <img src="http://dport96.github.io/ITM352/morea/080.flow-control-II/Blackberry.jpg">
