@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    Hello<br>
+    <div id="ageDiv"></div>
+    <div id="kidsDiv"></div>
+    <div id="firstName"></div>
+    <div id="middleName"></div>
+    <div id="lastName"></div>
+    <div id="fullName"></div>
+    <div id="initials"></div>
+    <div id="num"></div>
+    <script>
+        document.getElementById('ageDiv').innerHTML=(22*12+0)/12;
+    </script>
+    <script>
+        var kidsDiv = 2;
+        var firstName = "Kristen";
+        var lastName = "Yee";
+        var middleName = "Namiko";
+        var fullName = firstName + " " + middleName + " " + lastName;
+        var num = 0.0413;
+        var n = num.toFixed(2);
+        var stupid;
+
+        document.getElementById('fullName').innerHTML=fullName;
+        document.getElementById('initials').innerHTML=firstName.charAt(0) + "." +lastName.charAt(0) + ".";
+        document.getElementById('kidsDiv').innerHTML="I would like to have" + " " + kidsDiv*stupid + " " + "kids";
+        document.getElementById('num').innerHTML= "The tax on Kristen’s bill is" + " " + n*350;
+
+
+        document.write(firstName.bold()); 
+        document.write("<br>");
+        document.write(middleName.italics());
+        document.write("<br>");
+        document.write(lastName.big());
+    </script>
+
+    
+
+
+    
+</body>
+</html>
+
