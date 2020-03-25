@@ -5,11 +5,17 @@
 
 // Product Data
 
+var product_quantities = [2,1,1,3,12];
+
+product_quantities.push(10);
+
+
   // Product 1
   var product1 = {};
     product1 ['item'] ='Gillette Sensor 3 Razor';
-    product1 ['quantity'] = 2;
+    product1 ['quantity'] = product_quantities[0];
     product1.price = 1.23;
+
 
 product1['quantity'] = 0;
 product1 ['sku#'] = 1234;
@@ -17,23 +23,23 @@ product1 ['sku#'] = 1234;
   // Product 2
   product2 = {
   'item' : 'Barbasol Shaving Cream',
-    'quantity' : 1,
+    'quantity' : product_quantities[1],
      'price' : 2.64
-  };
+    };
 
   // Product 3
   var item3 = 'Nautica Cologne';
-     var quantity3 = 1;
+     var quantity3 = product_quantities [2];
      var price3 = 6.17;
 
  // Product 4
     var item4 = 'Rubbing Alcohol';
-    var quantity4 = 3;
+    var quantity4 = product_quantities [3];
      var price4 = 0.98;
 
  // Product 5
     var item5 = 'Colgate Classic Toothbrush';
-     var quantity5 = 12;
+     var quantity5 = product_quantities [4];
      var price5 = 1.89;
 
 
@@ -145,7 +151,34 @@ var total = subtotal+tax;
             <td width="54%"><strong>$<script>document.write(total.toFixed(2))</script></strong></td>
           </tr>
         </tbody>
-      </table>   
+      </table> 
+      
+      <table id=product_table style="border: 1px solid black;text-align: center;">
+        <tr style="border: 1px solid black;"><th style="border: 1px solid black;">Product #</th><th>Quanity</th></tr>
+        
+        <script>
+          for(i=0 ; i<product_quantities.length; i++) {
+            document.write(`<tr style="border: 1px solid black;"><td style="border: 1px solid black;">${i+1}</td><td>${product_quantities[i]}</td></tr>`);
+          }
+        </script>   
+         </table> 
+
+  <script>
+product1 = { 'name': 'small gumball', 'price': 0.02 };
+product2 = { 'name': 'medium gumball', 'price': 0.05 };
+product3 = { 'name': 'large gumball', 'price': 0.07 };
+
+// array of all products
+products = [product1, product2, product3];
+cart_quantities = [2,0,4]; // corresponds to products array
+
+var total = 0;
+for (i=0; i<cart_quantities.length; i++) {
+    extended_price = cart_quantities[i]*products[i].price;
+    document.write (extended_price+'<br>');
+}
+
+  </script>
 
 </body>
 </html>
