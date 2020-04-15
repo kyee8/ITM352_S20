@@ -4,11 +4,6 @@ var app = express();
 var myParser = require ("body-parser");
 var fs = require('fs');
 
-function checkQuantityTextbox (theTextbox) {
-    var errs = isNonNegInt(theTextbox.value, true);
-    qty_textbox_message.innerHTML = errs.join (","); 
-}
-
 function isNonNegInt(q, returnErrors = false) {
     errors = []; // assume no errors at first
     if(Number(q) != q) errors.push('Not a number!'); // Check if string is a number value
@@ -32,13 +27,12 @@ app.all('*', function (request, response, next) {
         if (isNonNegInt(q)) {
             var contents = fs.readFileSync('./views/display_quantity_template.view', 'utf8');
             response.send(eval('`' + contents + '`')); // render template string
-            //response.send("Works!");
         } else {
             response.send(`${q} is not a quantity!`);
-            
         }
     }
- }); 
+});
+
 
 app.use(express.static('./public'));
 app.listen(8080, () => console.log(`listening on port 8080`));

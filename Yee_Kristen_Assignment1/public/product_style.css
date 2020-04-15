@@ -1,0 +1,140 @@
+h1, h2, h3 {
+  
+  font-family: 'Comfortaa', serif;
+  margin: 0;
+  text-align: center;
+}
+
+h1 {
+  padding: 20px;
+  margin: 0;
+  text-align: center;
+  background: #ffd2e5;
+  color: black;
+  font-size: 50px;
+}
+
+h2 {
+  margin: 5%;
+  padding: 20px;
+  margin-top: 10%;
+  text-align: center;
+  background: #ffd2e5;
+  
+}
+
+h3 {
+  margin: 5%;
+  padding: 10px;
+  margin: 0;
+  text-align: center;
+  background: #ffffff;
+}
+
+
+.css-selector {
+  font-family: 'Comfortaa', serif;
+  }
+
+/* Horizontal navbar from https://www.w3schools.com/css/css_navbar_horizontal.asp */
+ul {
+    list-style-type: none;
+    overflow: hidden;
+    background-color: rgb(255, 255, 255);
+    /*display: inline-block;*/
+    
+    text-align: center;
+    font-family: 'Comfortaa', serif;
+  }
+  
+  li {
+    display: inline-block;
+    border-right:1px solid #bbb;
+  }
+  
+  li:last-child {
+    border-right: none;
+  }
+  
+  li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover:not(.active) {
+    background-color: rgb(255, 205, 236);
+  }
+  
+  .active {
+    background-color: rgb(255, 255, 255);
+  }
+
+/* Background image from https://www.w3schools.com/cssref/pr_background-image.asp */
+  body  {
+    background-image: url("./images/cherry1.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
+  
+  img {
+    display: block;
+    width: 300px;
+    height: auto;
+    margin-top: 3%;
+    margin-bottom: 5%;
+  }
+
+/* Add a hover effect (pink shadow) */
+  img:hover {
+    box-shadow: 0 0 5px 1px rgb(255, 174, 187);
+      }
+
+  main {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+      }
+
+/* Center store image in index page*/
+      .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+/* Button styling */
+input[type=submit] {
+  background-color: rgb(255, 181, 197);
+  color: black;
+  padding: 20px 40px;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 3%;
+  margin-left: 35%;
+  margin-bottom: 3%;
+  width: 30%;
+  cursor: pointer;
+}
+
+/* retrieved font-family from https://fonts.google.com/*/
+* {
+  font-family: 'Comfortaa', serif;
+}
+
+
+
+table, th, td {
+  border: 1px solid rgb(255, 190, 206);
+  border-collapse: collapse;
+  background-color: rgb(255, 255, 255);
+  width:100%
+}
+th, td {
+  padding: 15px;
+  text-align: center;
+}
