@@ -2,7 +2,7 @@ products =
 [
   {  
   "model":"Apple iPhone XS",  
-  "price": 990.00
+  "price": 1000.00
   },
   {  
   "model":"Samsung Galaxy",  
