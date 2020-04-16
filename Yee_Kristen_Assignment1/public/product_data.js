@@ -1,6 +1,6 @@
 // Kristen Yee 
-// JSON master list of bags
 
+// Master array containing information about each of my items, setting them 'products' variable
 var products =
 [
     {
@@ -44,6 +44,9 @@ var products =
         "image": "./images/Balenciaga_Purse.jpg"    
     }
 ];
+
+// Retrieved from Professor Port's Assignment 1 Example
+    // Makes sure products are defined
 if (typeof module != 'undefined') {
     module.exports.products = products;
     }

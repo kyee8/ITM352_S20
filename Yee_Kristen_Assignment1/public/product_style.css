@@ -1,5 +1,4 @@
-h1, h2, h3 {
-  
+h1, h2, h3, h4 { 
   font-family: 'Comfortaa', serif;
   margin: 0;
   text-align: center;
@@ -31,17 +30,26 @@ h3 {
   background: #ffffff;
 }
 
+h4 {
+  margin: 5%;
+  padding: 5px;
+  margin: 0;
+  text-align: Left;
+  background: #ffffff;
+  font-size: 16px;
+}
+
 
 .css-selector {
   font-family: 'Comfortaa', serif;
   }
 
 /* Horizontal navbar from https://www.w3schools.com/css/css_navbar_horizontal.asp */
+
 ul {
     list-style-type: none;
     overflow: hidden;
     background-color: rgb(255, 255, 255);
-    /*display: inline-block;*/
     
     text-align: center;
     font-family: 'Comfortaa', serif;
@@ -72,7 +80,7 @@ ul {
     background-color: rgb(255, 255, 255);
   }
 
-/* Background image from https://www.w3schools.com/cssref/pr_background-image.asp */
+/* Setting background image from https://www.w3schools.com/cssref/pr_background-image.asp */
   body  {
     background-image: url("./images/cherry1.jpg");
     background-position: center;
@@ -89,7 +97,7 @@ ul {
     margin-bottom: 5%;
   }
 
-/* Add a hover effect (pink shadow) */
+/* Add a hover effect (pink shadow) from https://www.w3schools.com/css/css3_shadows.asp */
   img:hover {
     box-shadow: 0 0 5px 1px rgb(255, 174, 187);
       }
@@ -100,7 +108,7 @@ ul {
     justify-content: space-around;
       }
 
-/* Center store image in index page*/
+/* Centers store icon on index page */
       .center {
         display: block;
         margin-left: auto;
@@ -126,15 +134,16 @@ input[type=submit] {
   font-family: 'Comfortaa', serif;
 }
 
-
-
 table, th, td {
   border: 1px solid rgb(255, 190, 206);
   border-collapse: collapse;
   background-color: rgb(255, 255, 255);
-  width:100%
+  width:60%;
+  margin-left: auto;
+  margin-right: auto;
 }
+
 th, td {
-  padding: 15px;
+  padding: 5px;
   text-align: center;
 }
