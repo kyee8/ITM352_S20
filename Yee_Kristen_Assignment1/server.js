@@ -33,12 +33,10 @@ app.get('/products.html', function (req, res, next) {
 });
 
 app.use(myParser.urlencoded({ extended: true }));
-app.post("/process_purchase", function (req, res, next) { // posts data from the process form, action being 'process_purchase'
+app.post("/process_form", function (req, res) { // posts data from the process form, action being 'process_purchase'
     res.send(`got a POST for /process_purchase with data ${JSON.stringify(req.body)} `); //sends response with POST confirmation & query string
-    // generates invoice
+    // generate invoice
 });
 
 app.use(express.static('./public')); // sets up middleware, uses express and pulls files from public folder
 app.listen(8080, () => console.log('server listening on port 8080')); // server listens on port 8080, outputs message logged in console
-
-
