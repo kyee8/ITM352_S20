@@ -108,7 +108,7 @@ app.get("/register", function (request, response) {
         response.send(`${username} is registered`);
         console.log(request.body);
     } else if (request.body.repeat_password != request.body.password) {
-        response.send('both passwords need to match');
+        response.send('Both passwords need to match. Please try again.');
     } else {
     response.redirect('/register');
  }
