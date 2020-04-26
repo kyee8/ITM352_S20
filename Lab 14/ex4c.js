@@ -100,19 +100,18 @@ app.get("/register", function (request, response) {
     // process a simple register form
     username = "newuser";
     username = request.body.username;
-    if (typeof userdata[login_username] !='undefined') {
-        response.redirect('/login');
-    } else if (request.body.repeat_password != request.body.password) {
-        response.send('both passwords need to match');
-    } else {
+    if (typeof userdata[login_username] =='undefined') {
         userdata[username] = {};
         userdata[username].password = request.body.password;
         userdata[username].email = request.body.email;
         fs.writeFileSync(user_info_file, JSON.stringify(userdata));
         response.send(`${username} is registered`);
         console.log(request.body);
-    }  
-    response.redirect('/login');
+    } else if (request.body.repeat_password != request.body.password) {
+        response.send('both passwords need to match');
+    } else {
+    response.redirect('/register');
+ }
 });
 
 
