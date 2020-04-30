@@ -98,20 +98,30 @@ app.get("/register", function (request, response) {
 
  app.post("/register", function (request, response) {
     // process a simple register form
-    username = "newuser";
+    console.log(request.body);
     username = request.body.username;
-    if (typeof userdata[login_username] =='undefined') {
-        userdata[username] = {};
-        userdata[username].password = request.body.password;
-        userdata[username].email = request.body.email;
-        fs.writeFileSync(user_info_file, JSON.stringify(userdata));
-        response.send(`${username} is registered`);
-        console.log(request.body);
-    } else if (request.body.repeat_password != request.body.password) {
-        response.send('Both passwords need to match. Please try again.');
+    errs = [];
+    
+    //check if username is taken
+    if (typeof userdata[username] != 'undefined') {
+        errs.push("username taken");
     } else {
-    response.redirect('/register');
- }
+         userdata[username] = {};
+    }
+    //is pass same as repeat pass
+    if (request.body.password != request.body.repeat_password) {
+        errs.push("passwords don't match");
+    } else {
+        userdata[username].password = request.body.password;
+    } 
+    userdata[username].email = request.body.email;
+    console.log(errs);
+    if (errs.length == 0) {
+        fs.writeFileSync(user_info_file, JSON.stringify(userdata));
+        response.redirect(`./login`);
+    } else {
+        response.end(JSON.stringify(errs));
+    }
 });
 
 

@@ -104,8 +104,7 @@ app.get("/register", function (request, response) {
     userdata[username].email = request.body.email;
 
     fs.writeFileSync(user_info_file, JSON.stringify(userdata));
-    response.send(`${username} is registered`);
-
+    response.redirect(`./login`);
  });
 
 
