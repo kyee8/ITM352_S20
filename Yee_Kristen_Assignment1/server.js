@@ -33,7 +33,7 @@ app.get('/products.html', function (req, res, next) {
 });
 
 app.use(myParser.urlencoded({ extended: true }));
-app.post("/process_form", function (req, res) { // posts data from the process form, action being 'process_purchase'
+app.post("/process_form", function (req, res) { // posts data from the process form, action being 'process_purchase' 
     res.send(`got a POST for /process_purchase with data ${JSON.stringify(req.body)} `); //sends response with POST confirmation & query string
     // generate invoice
 });

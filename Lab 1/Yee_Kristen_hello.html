@@ -1,1 +1,45 @@
 <html><i>Hello from <b>Kristen Yee</b>!</i></html>
+
+app.post("/login", function (request, response) {
+    // Process login form POST and redirect to logged in page if ok, back to login page if not
+    console.log(request.body, userdata);
+    login_username = request.body.username;
+    // checks if username exists in reg data. if so, check if password is correct
+    if (typeof userdata[login_username] !='undefined') {
+        //checks if password stored for username matches what user typed in
+        if (userdata[login_username].password == request.body["password"]) {
+            response.end(`${login_username} is logged in`);
+        }  else {
+            response.redirect('/login')
+        }
+    } 
+});
+
+
+
+app.use(myParser.urlencoded({ extended: true }));
+app.post("/process_form", function (request, response) { // posts data from the process form, action being 'process_purchase'
+let POST = request.body; //assigns the body into POST variable
+    var hasValidQuantities = true; //assume that the quantities textbox is true
+    var hasPurchases = false; //assume the quantity of purchases are false
+    for (i = 0; i < products.length; i++) { //for loop for each product in the array that increases the count by 1
+        q = POST[`quantity${i}`]; //quantity entered by the user for a product(s) is assigned into q
+        if (isNonNegInt(q) == false) { //if the quantity enteredby the user is not a valid integer
+            hasValidQuantities = false; //HasValidQuantities is false or nothing was purchased
+        }
+        if (q > 0) { //if the quantity entered is more than 0
+            hasPurchases = true; //hasPurchases is true and the user has entered a valid integer(s) to purchase something
+        }
+    }
+    //source from Professor Ports office hours
+    //if data is valid give user an invoice, if not give them an error
+    var qString = querystring.stringify(POST); //string query together
+    if (hasValidQuantities == true && hasPurchases == true) {//if hasValidQuantities and hasPurchases is true
+        response.redirect('login.html?' + qString); //redirects the user to the login page with qstring
+    }
+    else {
+
+        response.redirect("./products.html?" + qString); //if quantity is not valid, user is sent back to product page along with the query data entered previously from the user
+    }
+
+});

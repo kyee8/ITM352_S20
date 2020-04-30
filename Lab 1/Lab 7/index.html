@@ -14,3 +14,18 @@ if (typeof userdata[login_username] !='undefined') {
 }  
 response.redirect('/login');
 });
+
+
+
+
+//POST the data from the process form where the action is 'process_form'
+app.post("/process_form", function (request, response) {
+    let POST = request.body;
+    var qString = querystring.stringify(request.query);
+    if(typeof POST['purchase_submit'] == 'undefined') {
+    response.redirect("./products.html?" + qString);
+    } else {
+    response.redirect("./invoice.html?" + qString);    
+    }
+
+});
