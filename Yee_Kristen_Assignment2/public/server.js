@@ -30,7 +30,7 @@ app.all('*', function (request, response, next) {
 });
 
 // Retrieved from Professor Port's Assignment 1 Example
-app.get('/products.html', function (request, response, next) {
+app.get('/products', function (request, response, next) {
     data = require('./public/product_data.js');
     products = data.products;
     if (typeof request.query['purchase_submit'] != 'undefined') {
@@ -60,6 +60,7 @@ let POST = request.body; // lets POST variable hold contents of the body
 
 
 // Retrieved from Lab 14
+// CHacks to see if the file exists
 if (fs.existsSync(user_info_file)) {
     var file_stats = fs.statSync(user_info_file);
     var data = fs.readFileSync(user_info_file, 'utf-8');
@@ -68,10 +69,10 @@ if (fs.existsSync(user_info_file)) {
     fs.writeFileSync(user_info_file, JSON.stringify(userdata));
 
     console.log(userdata); 
-    console.log(`${user_info_file} has ${file_stats.size} characters`);
+    console.log(`${user_info_file} has ${file_stats.size} characters`); // Logs character amount in console
 
 } else { 
-    console.log ("hey!" + user_info_file + "doesn't exist");
+    console.log ("hey!" + user_info_file + "doesn't exist"); // else, sends message to console that file doesn't exist
 }
     
 app.use(myParser.urlencoded({ extended: true }));
@@ -79,9 +80,9 @@ app.use(myParser.urlencoded({ extended: true }));
 
 
 app.get("/login", function (request, response) {
-    quantity_str = request.query;
+    quantity_str = request.query; // set quantity_str variable to reuqest query 
     
-    // Give a simple login form
+// Give a simple login form
     str = `
 <body>
     <form action="/login" method="POST"> 
@@ -103,6 +104,7 @@ app.get("/login", function (request, response) {
       </form>
 </body>
 
+/* Login Styling retrieved from https://www.w3schools.com/howto/howto_css_login_form.asp */
         <style>
         body {font-family: Arial, Helvetica, sans-serif;}
         form {border: 30px solid #ffb6c1;}
@@ -154,27 +156,27 @@ app.get("/login", function (request, response) {
 
  // Retrieved from Lab 14 with Professor Port's help
  app.post("/login", function (request, response) {
-    // Process login form POST and redirect to logged in page if ok, back to login page if not
+    // Process login form POST and redirect to invoice page if ok, back to login page if not
     console.log(request.body);
     console.log(quantity_str);
     var err_str = "";
-    var login_username = request.body.username;
-    quantityQuery_str = querystring.stringify(quantity_str);
+    var login_username = request.body.username.toLowerCase();
+    quantityQuery_str = querystring.stringify(quantity_str); // Strings query together and sets it to quantityQuery_str variable
 
-    // checks if username exists in reg data. if so, check if password is correct
-    if (typeof userdata[login_username] !='undefined') {
-        var user_info = userdata[login_username];
+    // Checks if username exists in reg data. if so, check if password is correct
+    if (typeof userdata[login_username] !='undefined') { // checks if userdata has a matching username, if not it will be undefined
+        var user_info = userdata[login_username]; // sets user_info variable to userdata username
         //checks if password stored for username matches what user typed in
-        if (user_info["password"] != request.body["password"]) {
-          response.send("Sorry! Wrong username. Please go back and try again.");
+        if (user_info["password"] != request.body["password"]) { // if password entered doesn't match whats stored
+          response.send("Sorry! Wrong password. Please go back and try again."); // Send error message to go back and try another password
         }  else {
-            response.redirect('./invoice.html?' + quantityQuery_str + `&username=${login_username}`);
+            response.redirect('./invoice.html?' + quantityQuery_str + `&username=${login_username}`); // Everything else, redirect to invoice with quantity string (w/item quantities) and username (security purposes)
             return;
         }
     } else {
-      response.send("Sorry! Wrong password. Please go back and try again.");
+      response.send("Sorry! Wrong username. Please go back and try again."); // Else must be wrong username, so send error message to input another username
     }
-    response.redirect('./login.html?' + quantityQuery_str + `&username=${login_username}`);
+    response.redirect('./login?' + quantityQuery_str + `&username=${login_username}`); 
 
   });
 
@@ -210,8 +212,8 @@ app.get("/register", function (request, response) {
   </div>
   </form>
 
+  /* Registration Styling retrieved from https://www.w3schools.com/howto/howto_css_register_form.asp */
   <style>
-
   body {font-family: Arial, Helvetica, sans-serif;}
         form {border: 30px solid #ffb6c1;}
 
@@ -267,9 +269,9 @@ hr {
   opacity:1;
 }
 
-/* Add a blue text color to links */
+/* Add a pink text color to links */
 a {
-  color: dodgerblue;
+  color: pink;
 }
 
 /* Set a grey background color and center the text of the "sign in" section */
@@ -277,7 +279,6 @@ a {
   background-color: #f1f1f1;
   text-align: center;
 }
-
   </style>
 
 </body>
@@ -286,7 +287,7 @@ a {
  });
 
 
-  // Retrieved from Lab 14 with Professor Port's help
+// Retrieved from Lab 14 with Professor Port's help
  app.post("/register", function (request, response) {
     // process a simple register form
     console.log(request.body);
@@ -298,36 +299,37 @@ a {
     
   // Name
   if ((request.body.name.length > 30) ==true){
-    errs.push(" Please input a name with 30 characters or less."); //if length is more than 10, show error to make the username shorter
+    errs.push(" Please input a name with 30 characters or less."); // if length of name is more than 30, show error to make name shorter
   }
   // Check if username is taken
   if (typeof userdata[username] != 'undefined') {
-    errs.push(" Sorry! Username is already taken. Please go back and input a different one. ");
+    errs.push(" Sorry! Username is already taken. Please go back and input a different one. ");// if username is not undefined, show error message to input another username
   } 
   if ((username.length > 10) ==true){
-    errs.push(" 4-10 characters are required for username! Please make your username shorter. "); //if length is more than 10, show error to make the username shorter
+    errs.push(" 4-10 characters are required for username! Please make your username shorter. "); // if length is more than 10, show error to make the username shorter
   }
   if ((username.length < 4) ==true){
-    errs.push(" 4-10 characters are required for username! Please make your username longer. "); //if length is less than 4, show error to make the username longer
+    errs.push(" 4-10 characters are required for username! Please make your username longer. "); // if length is less than 4, show error to make the username longer
   } 
     //is pass same as repeat pass
   if (request.body.password != request.body.repeat_password) {
-    errs.push(" Sorry! The passwords you inputted do not match. Please go back and try again. ");
+    errs.push(" Sorry! The passwords you inputted do not match. Please go back and try again. "); // if password doesn not match the repeat password, show error that passwords don't match
   }
-  if ((username.length < 6) ==true){
-    errs.push(" At least 6 characters are required for password! Please make your password longer. ");
+  if ((request.body.password.length < 6) ==true){
+    errs.push(" At least 6 characters are required for password! Please make your password longer. "); // if password is not at least 6 characters, show error message that password needs to be longer
   } 
-  if (errs.length == 0) {
+  if (errs.length == 0) { // if there are no errors counted, grab store set userdata variables below 
     userdata[username] = {};
     userdata[username].name = request.body.name
     userdata[username].password = request.body.password;
     userdata[username].email = request.body.email;
     
-      fs.writeFileSync(user_info_file, JSON.stringify(userdata));
+      fs.writeFileSync(user_info_file, JSON.stringify(userdata)); // write the stringified userdata to user_data.json file
       quantityQuery_str = querystring.stringify(quantity_str);
-          response.redirect('./invoice.html?' + quantityQuery_str + `&username=${username}`);
+          response.redirect('./invoice?' + quantityQuery_str + `&username=${username}`); // redirect user to their invoice upon successful registration
     } else {
-        response.end(JSON.stringify(errs));
+        response.end(JSON.stringify(errs)); // everything else,
+        console.log(errs)
     }
 });
 

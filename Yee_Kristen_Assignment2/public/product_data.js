@@ -1,6 +1,6 @@
 // Kristen Yee 
+// Description: Master array containing information about each of my items, setting them 'products' variable
 
-// Master array containing information about each of my items, setting them 'products' variable
 var products =
 [
     {
