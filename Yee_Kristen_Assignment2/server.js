@@ -291,9 +291,11 @@ a {
     // process a simple register form
     console.log(request.body);
     console.log(quantity_str);
-    username = request.body.username.toLowerCase(); // Makes username case sensitive
+    name = request.body.name;
+    username = request.body.username;
+    email = request.body.email;
     password = request.body.password.toLowerCase(); // Makes password case sensitive
-    email = request.body.email.toLowerCase(); // Makes email case sensitive
+    repeat_password = request.body.repeat_password.toLowerCase(); // Makes repeat password case sensitive
     errs = [];
     
   // Name
@@ -314,7 +316,7 @@ a {
   if (request.body.password != request.body.repeat_password) {
     errs.push(" Sorry! The passwords you inputted do not match. Please go back and try again. ");
   }
-  if ((username.length < 6) ==true){
+  if ((request.body.password.length < 6) ==true){
     errs.push(" At least 6 characters are required for password! Please make your password longer. ");
   } 
   if (errs.length == 0) {
