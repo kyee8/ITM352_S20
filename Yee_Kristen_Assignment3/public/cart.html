@@ -1,0 +1,59 @@
+<!--Name: Kristen Yee
+// Description: Cart Page-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
+    <title></title>
+    <link rel="stylesheet" href="./product_style.css">
+
+    <h1>Cart</h1>
+
+</head>
+<body>
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="products.html">SHOP</a></li>
+        <li><a href="aboutus.html">ABOUT US</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="cart.html">CART</a></li>
+
+    </ul>
+    
+    <p>
+        <h4>
+        Dis da Cart
+        </h4>
+    </p>   
+
+    <form action="invoice.html" method="GET">
+        <script>
+            //fetch order for shopping cart
+            //order stored in session but cannot get order for cart
+            for (i = 0; i < request.session.cart.length; i++) {
+                    document.write(`
+                <h2>${products[idx].item}</h2>
+                <img src="${products[idx].image}">
+                <p class="price">${products[idx].price}</p>
+                <input type="text" disabled value="${p_qty}" onkeyup="checkQuantityTextbox(this);">
+                `)
+                };
+    
+    
+       
+    //purchase items in shopping cart
+    </script>
+     <input name="purchase_submit" type="submit" value="Purchase">
+    
+    </form> 
+
+        <footer>
+            <input type="submit" value="Purchase!" name="purchase_submit">
+        </footer>
+
+    
+</body>
+</html>

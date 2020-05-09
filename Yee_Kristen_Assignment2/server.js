@@ -103,6 +103,7 @@ app.get("/login", function (request, response) {
       </form>
 </body>
 
+<!-- Retrieved login page styling from https://www.w3schools.com/howto/howto_css_login_form.asp -->
         <style>
         body {font-family: Arial, Helvetica, sans-serif;}
         form {border: 30px solid #ffb6c1;}
@@ -159,22 +160,22 @@ app.get("/login", function (request, response) {
     console.log(quantity_str);
     var err_str = "";
     var login_username = request.body.username;
-    quantityQuery_str = querystring.stringify(quantity_str);
+    quantityQuery_str = querystring.stringify(quantity_str); //define query string variable
 
     // checks if username exists in reg data. if so, check if password is correct
-    if (typeof userdata[login_username] !='undefined') {
+    if (typeof userdata[login_username] !='undefined') { // if username entered is not recognized
         var user_info = userdata[login_username];
         //checks if password stored for username matches what user typed in
-        if (user_info["password"] != request.body["password"]) {
-          response.send("Sorry! Wrong username. Please go back and try again.");
+        if (user_info["password"] != request.body["password"]) { // if password entered does not match any of the stored passwords
+          response.send("Sorry! Wrong password Please go back and try again."); // respond by sending a wrong password error message
         }  else {
-            response.redirect('./invoice.html?' + quantityQuery_str + `&username=${login_username}`);
+            response.redirect('./invoice.html?' + quantityQuery_str + `&username=${login_username}`); // else send to invoice page with quantity query string + username in url (security) assuming everythng is good
             return;
         }
     } else {
-      response.send("Sorry! Wrong password. Please go back and try again.");
+      response.send("Sorry! Wrong username. Please go back and try again."); // else assume username is wrong so send username error message
     }
-    response.redirect('./login.html?' + quantityQuery_str + `&username=${login_username}`);
+    response.redirect('./login.html?' + quantityQuery_str + `&username=${login_username}`); // to ensure quantity query string is not lost
 
   });
 
@@ -209,6 +210,8 @@ app.get("/register", function (request, response) {
     <button type="submit" class="registerbtn">Register</button>
   </div>
   </form>
+
+  <!-- Retrieved registration page styling from https://www.w3schools.com/howto/howto_css_register_form.asp -->
 
   <style>
 
@@ -267,9 +270,9 @@ hr {
   opacity:1;
 }
 
-/* Add a blue text color to links */
+/* Add a pink text color to links */
 a {
-  color: dodgerblue;
+  color: pink;
 }
 
 /* Set a grey background color and center the text of the "sign in" section */
@@ -300,11 +303,11 @@ a {
     
   // Name
   if ((request.body.name.length > 30) ==true){
-    errs.push(" Please input a name with 30 characters or less."); //if length is more than 10, show error to make the username shorter
+    errs.push(" Please input a name with 30 characters or less."); //if length is more than 10, show username error
   }
   // Check if username is taken
   if (typeof userdata[username] != 'undefined') {
-    errs.push(" Sorry! Username is already taken. Please go back and input a different one. ");
+    errs.push(" Sorry! Username is already taken. Please go back and input a different one. "); //if username is not undefined, send error message that it's already taken
   } 
   if ((username.length > 10) ==true){
     errs.push(" 4-10 characters are required for username! Please make your username shorter. "); //if length is more than 10, show error to make the username shorter
@@ -314,22 +317,22 @@ a {
   } 
     //is pass same as repeat pass
   if (request.body.password != request.body.repeat_password) {
-    errs.push(" Sorry! The passwords you inputted do not match. Please go back and try again. ");
+    errs.push(" Sorry! The passwords you inputted do not match. Please go back and try again. "); //if passwords do not match, send error message that they don't match
   }
   if ((request.body.password.length < 6) ==true){
-    errs.push(" At least 6 characters are required for password! Please make your password longer. ");
+    errs.push(" At least 6 characters are required for password! Please make your password longer. "); //if password is less then 6 characters, send error message to make it longer
   } 
-  if (errs.length == 0) {
+  if (errs.length == 0) { //if there are no errors, gather all the data that was entered
     userdata[username] = {};
     userdata[username].name = request.body.name
     userdata[username].password = request.body.password;
     userdata[username].email = request.body.email;
     
-      fs.writeFileSync(user_info_file, JSON.stringify(userdata));
-      quantityQuery_str = querystring.stringify(quantity_str);
-          response.redirect('./invoice.html?' + quantityQuery_str + `&username=${username}`);
+      fs.writeFileSync(user_info_file, JSON.stringify(userdata)); //write and save all the data to the user_data.json file
+      quantityQuery_str = querystring.stringify(quantity_str); //define query string variable again
+          response.redirect('./invoice.html?' + quantityQuery_str + `&username=${username}`); //then redirect customer to their invoice page with the correct product quantity (achieved by using query string)
     } else {
-        response.end(JSON.stringify(errs));
+        response.end(JSON.stringify(errs)); //else send the errors
     }
 });
 

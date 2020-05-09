@@ -7,22 +7,20 @@ var myParser = require("body-parser");
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-var session = require('express-session');
-app.use(session({secret: "ITM352 rocks!"}));
-
 
 app.use(myParser.urlencoded({ extended: true }));
+
 // add a route to get a cookie that may have been set here
 app.get("/set_cookie", function (request, response) {
     console.log("In GET /set_cookie");
     var my_name = 'kristen';
-    response.cookie('your_name', my_name).send('cookie set'); // sets name = express
+    response.cookie('your_name', my_name, { maxAge: 5 * 1000 }).send('cookie set'); // sets name = express
 });
 
 app.get("/use_cookie", function (request, response) {
     console.log("In GET /use_cookie" , request.cookies);
     var the_name = request.cookies["your_name"];
-    response.cookie('Welcome to the Use Cookie page' + the_name ); // sets name = express
+    response.send('Welcome to the Use Cookie page ' + the_name); // sets name = express
 });
 
 
