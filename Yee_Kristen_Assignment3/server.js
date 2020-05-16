@@ -298,7 +298,7 @@ a {
     repeat_password = request.body.repeat_password.toLowerCase(); // Makes repeat password case sensitive
     errs = [];
     
-  // Name
+  // Checks Name
   if ((request.body.name.length > 30) ==true){
     errs.push(" Please input a name with 30 characters or less."); //if length is more than 10, show error to make the username shorter
   }
