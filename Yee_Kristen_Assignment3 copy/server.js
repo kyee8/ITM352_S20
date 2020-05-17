@@ -1,25 +1,24 @@
 // Name: Kristen Yee
 // Description: Server processing for e-commerce purse website
 
-
+// Retrieved from Lab 13
 // server loads express NOT http
 var fs = require('fs');
-var user_info_file = './user_data.json';
-var userdata = fs.readFileSync(user_info_file, 'utf-8');
+var user_info_file = './user_data.json'; // assigns user data from user_data.json file to variable user_info_file
+var userdata = fs.readFileSync(user_info_file, 'utf-8'); // assigns userdata variable to readFileSync(user_info_file) to read the full content of the file in memory before returning data
 var express = require('express'); // creates 'express' variable thats set to run express
 var app = express(); // creates 'app' variable thats set to start up express
 var myParser = require("body-parser"); // creates 'myParser' variable thats set to require 'body-parser'
 const querystring = require('querystring');
 var quantity_str;
 data = require('./public/product_data.js');
-
-
 var products = data.products;
 
-var cookieParser = require('cookie-parser');
+// Retrieved from Lab 15
+var cookieParser = require('cookie-parser'); // assigns cookieParser variable to require cookie-parser 
 app.use(cookieParser());
 
-var session = require('express-session');
+var session = require('express-session'); // assigns session variable to require express-session 
 app.use(session({
   secret: "ITM352 rocks!",
   resave: false,
@@ -44,7 +43,9 @@ app.all('*', function (request, response, next) {
   next();
 });
 
-app.get("/invoice", function (request, response, next) { //created to display items in the shopping cart
+
+// Sourced from Professor Port's Office Hours
+app.get("/invoice", function (request, response, next) { //created to generate invoice page
   console.log(request.session.cart); //log the session cart data into the console
   var str = "";
   str += `
@@ -53,22 +54,16 @@ app.get("/invoice", function (request, response, next) { //created to display it
   <header>
   <h1>Beautifully Designed<br>----- Invoice -----</h1> 
 
-
 </header>`
+  if (session.username != undefined) { // if session username is not undefined
+    str += `<h3><p style="color:red">Thank you for you purchase ${session.username}! </p></h3>` // generate UI thank you message for user if they are logged in
 
-
-  if (session.username != undefined) {
-    str += `<h3><p style="color:red">Thank you for you purchase ${session.username}! </p></h3><!--UI message for user if they are logged in-->`
-  } //**if no username then send to login
-
-
-
-  //variabes created to keep track of extended price, subtotal, tax rate and shipping costs
-  extended_price = 0;
-  subtotal = 0;
-  var tax_rate = 0.0575;
-  shipping = 0;
-str += `
+    //variabes created to keep track of extended price, subtotal, tax rate and shipping costs
+    extended_price = 0;
+    subtotal = 0;
+    var tax_rate = 0.0575;
+    shipping = 0;
+    str += `
 <table border="2">
 <tbody>
   <tr>
@@ -79,19 +74,19 @@ str += `
   </tr>
 `;
 
-  //for loops that generate products that the customer orders and posts them on the cart page
-  for (product_type in request.session.cart) {
-    for (i = 0; i < products[product_type].length; i++) {
-      //variable used to check that the quantities of the products
-      q = request.session.cart[product_type][`quantity${i}`];
-      if (q == 0) {
-        continue;
-      }
-      //extended price is the price of each product times the amount of that item added
-      extended_price = products[product_type][i]["price"] * q;
-      subtotal += extended_price;
-      //this string will be posted on the cart page
-      str += ` 
+    //for loops that generate products that the customer orders and posts them on the invoice page
+    for (product_type in request.session.cart) { // for every product type detected in the sessions cart
+      for (i = 0; i < products[product_type].length; i++) { // A for loop generates length of products by product type from product_data.js file onto the invoice page, (i=i+1 -> post increment: use the value of i first, then increment)
+        //variable used to check that the quantities of the products
+        q = request.session.cart[product_type][`quantity${i}`]; // sets q variable to the quantities of items inputted inside session
+        if (q == 0) { // if products quantitiy equals 0
+          continue;  //continue, breaking one iteration in loop
+        }
+        //extended price is the price of each product times the amount of that item added
+        extended_price = products[product_type][i]["price"] * q;
+        subtotal += extended_price;
+        //this string posts item submitted from cart on the invoice page
+        str += ` 
       <tr>
         <td width="43%">${products[product_type][i]["product"]}</td> 
         <td align="center" width="11%">${q}</td>
@@ -99,28 +94,28 @@ str += `
         <td width="54%">\$${extended_price}</td>
       </tr>
       `;
-      
-    }
-  }
-  // Compute shipping
-  if (subtotal > 0 && subtotal <= 2500) { // If subtotal is less than or equal to $2,500, shipping = $5
-    shipping = 5;
-  }
-  else if (subtotal > 2500 && subtotal <= 5000) { // Else if subtotal is less than or equal to $5,000, shipping = $10
-    shipping = 10;
-  }
-  else if (subtotal > 5000) { // Else if subtotal is greater than $5,000, shipping = $0 (free)
-    shipping = 0; // Free shipping!
-  }
-  //calculate the tax by multiplying the tax rate to the subtotal
-  var tax = tax_rate * subtotal;
-  //calculate the grand total by adding subtotal with tax and shipping
-  var grand_total = subtotal + tax + shipping;
 
-  //add html to display cost information to the str variable
-  str += ` 
+      }
+    }
+    // Compute shipping
+    if (subtotal > 0 && subtotal <= 2500) { // If subtotal is greater than $0 but less than or equal to $2,500, shipping = $5
+      shipping = 5;
+    }
+    else if (subtotal > 2500 && subtotal <= 5000) { // Else if subtotal is greater than $2500 but less than or equal to $5,000, shipping = $10
+      shipping = 10;
+    }
+    else if (subtotal > 5000) { // Else if subtotal is greater than $5,000, shipping = $0 (free)
+      shipping = 0; // Free shipping!
+    }
+    //calculate the tax by multiplying the tax rate to the subtotal
+    var tax = tax_rate * subtotal;
+    //calculate the grand total by adding subtotal with tax and shipping
+    var grand_total = subtotal + tax + shipping;
+
+    //add html to display cost information to the str variable
+    str += ` 
   
-  <!--Generates table for subtotal, tax, shipping & total (fixed to 2 deci places) from customers purchase-->
+  <!--Generates invoice table for subtotal, tax, shipping & total (fixed to 2 deci places) from customers purchase-->
       <tr>
         <td colspan="4" width="100%">&nbsp;</td>
       </tr>
@@ -153,22 +148,49 @@ str += `
 
   
 `;
-if (grand_total == 0) {
-  response.send(`
+    if (grand_total == 0) { //if grand_total = 0, cart must be empty so send them a response saying that no invoice was generated
+      response.send(` 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
   <link rel="stylesheet" href="./product_style.css"> 
-  <h2>Your cart is empty <br>Please go <a href="./">back</a> and add items to view your cart</h2>`);
-} else {
-//send the invoice to email
-//code here to send variable str to email
-//if successful add the following to webpage
-var userInfo = userdata[session.username];
-str += `<h1>Your invoice was send to ${userInfo['email']}</h1>`
-request.session.destroy();
+  <h2>No invoice was generated <br>Please go <a href="./">back</a>, add items to your cart, log into your account, & submit purchase to receive invoice</h2>`);
+    } else { //else, send the invoice to email
+      //code here to send variable str to email
+
+      //sends an email to the users' email, retrieved from https://www.w3schools.com/nodejs/nodejs_email.asp
+
+      var userInfo = userdata[session.username];
+      var nodemailer = require('nodemailer');
+
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'beautifullydesigned808@gmail.com',
+          pass: 'password808'
+        }
+      });
+
+      var mailOptions = {
+        from: 'beautifullydesigned808@gmail.com',
+        to: userInfo['email'],
+        subject: 'Beautifully Designed : Thank you!',
+        text: 'Thank you for your order. Please shop with us again!'
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
+      str += `<h1>Your invoice was sent to ${userInfo['email']}</h1>`
+      request.session.destroy(); // after invoice is sent, customer session is destroyed and cart is cleared
 
 
-  response.send(str);
-}
+      response.send(str);
+    }
+  }
 });
 
 
@@ -198,33 +220,33 @@ app.get("/display_cart", function (request, response, next) { //created to displ
 </header>`
 
 
-  if (session.username != undefined) {
+  if (session.username != undefined) { // if session username is not undefined, send user a UI message that they are logged in + a links that'll either take them back to shopping (if they change their mind & want to shop more) or cart (to double check items & submit for final purchase when ready)
     str += `<h3> <p style="color:red">Welcome ${session.username}! You are currently logged in. </p></h3> <!--UI message for user if they are logged in-->`
   }
 
-  //variabes created to keep track of extended price, subtotal, tax rate and shipping costs
+  //variabes created to keep track of extended price, subtotal, tax rate and shipping costs for cart
   extended_price = 0;
   subtotal = 0;
   var tax_rate = 0.0575;
   shipping = 0;
 
   //for loops that generate products that the customer orders and posts them on the cart page
-  for (product_type in request.session.cart) {
-    for (i = 0; i < products[product_type].length; i++) {
-      //variable used to check that the quantities of the products
-      q = request.session.cart[product_type][`quantity${i}`];
-      if (q == 0) {
-        continue;
+  for (product_type in request.session.cart) { // for every product type detected in the sessions cart
+    for (i = 0; i < products[product_type].length; i++) { // A for loop generates length of products by product type from product_data.js file onto the cart page, (i=i+1 -> post increment: use the value of i first, then increment)
+      //variable used to check that the quantities of the products selected inside session
+      q = request.session.cart[product_type][`quantity${i}`]; // sets q variable to the quantities of items inputted inside session
+      if (q == 0) { // if products quantitiy equals 0
+        continue; //continue, breaking one iteration in loop
       }
       //extended price is the price of each product times the amount of that item added
       extended_price = products[product_type][i]["price"] * q;
       subtotal += extended_price;
-      //this string will be posted on the cart page
+      //this string posts items added to cart on the cart page
       str += `
    
 
     <body>     
-    <form action="/display_cart" method="POST">
+    <form action="/display_cart" method="POST"> <!--Form that POSTS items selected from users' session-->
 
     <div class="shop-item">
     <!--List the product names-->
@@ -249,10 +271,10 @@ app.get("/display_cart", function (request, response, next) { //created to displ
     }
   }
   // Compute shipping
-  if (subtotal > 0 && subtotal <= 2500) { // If subtotal is less than or equal to $2,500, shipping = $5
+  if (subtotal > 0 && subtotal <= 2500) { // If subtotal is greater than $0 but less than or equal to $2,500, shipping = $5
     shipping = 5;
   }
-  else if (subtotal > 2500 && subtotal <= 5000) { // Else if subtotal is less than or equal to $5,000, shipping = $10
+  else if (subtotal > 2500 && subtotal <= 5000) { // Else if subtotal is greater than $2500 but less than or equal to $5,000, shipping = $10
     shipping = 10;
   }
   else if (subtotal > 5000) { // Else if subtotal is greater than $5,000, shipping = $0 (free)
@@ -263,7 +285,7 @@ app.get("/display_cart", function (request, response, next) { //created to displ
   //calculate the grand total by adding subtotal with tax and shipping
   var grand_total = subtotal + tax + shipping;
 
-  //add html to display cost information to the str variable
+  // html that displays the carts cost information to the str variable
   str += ` 
   <form action="/display_cart" method="POST">
   <footer>
@@ -275,23 +297,23 @@ app.get("/display_cart", function (request, response, next) { //created to displ
   <input type="submit" value="Checkout Cart!" name="submit_cart">
 </footer>
 </form>`
-if (grand_total == 0) {
-  response.send(`
+  if (grand_total == 0) { // if grand_total = $0, cart must be empty so send a message that leads them back to shop in order for them to view items in their cart
+    response.send(`
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
   <link rel="stylesheet" href="./product_style.css"> 
   <h2>Your cart is empty <br>Please go <a href="./">back</a> and add items to view your cart</h2>`);
-}
+  }
 
   response.send(str);
 
 });
 
 
-app.post("/display_cart", function (request, response) { // posts data from the display_cart form, with action named "display_cart"
-  if (typeof session.username != "undefined") {
-    response.redirect('./invoice');
-  } else {
-    response.redirect('./login');
+app.post("/display_cart", function (request, response) { // posts data from the display_cart form, with action named "display_cart" (activated when submit purchase button is clicked in cart)
+  if (typeof session.username != "undefined") { // if the session username is not undefined
+    response.redirect('./invoice'); // they must already be logged in if their username is defined so redirect them to the invoice
+  } else { // everything else
+    response.redirect('./login'); // redirect to the /login so they can login (required to view invoice)
 
   }
 });
@@ -301,40 +323,39 @@ app.post("/display_cart", function (request, response) { // posts data from the 
 app.use(myParser.urlencoded({ extended: true }));
 
 app.post("/process_form", function (request, response) { // posts data from the process form, with action named "process_form"
-  if (typeof request.session.cart == "undefined") {
-    request.session.cart = {};
+  if (typeof request.session.cart == "undefined") { // if the sessions cart is undefined
+    request.session.cart = {}; // set cart to empty
   }
   let POST = request.body; // lets POST variable hold contents of the body 
   var hasPurchases = false; // sets hasPurchases variable to false, assuming that the quantity of purchases starts off as false
-  var isValidData = true;
+  var isValidData = true; // sets is ValidData variable to true, assuming that the data entered is valid
   console.log(products);
 
-  if (typeof POST["product_type"] != "undefined") {
-    var product_type = POST["product_type"];
-    for (i = 0; i < products[product_type].length; i++) { // For loop that generates length of products by +1, (i=i+1 -> post increment: use the value of i first, then increment)
+  if (typeof POST["product_type"] != "undefined") { // if "product_type" string is not undefined
+    var product_type = POST["product_type"]; // set product_type variable to request the body of "product_type" string
+    for (i = 0; i < products[product_type].length; i++) { // For loop that generates length of products by their product type by +1, (i=i+1 -> post increment: use the value of i first, then increment)
       q = POST[`quantity${i}`]; // assigns q variable to the quantity that is submitted by the user
       if (q > 0) { // if the quantity entered is more than zero
         hasPurchases = true; // then hasPurchases variable is now set at true, as the user has entered a valid quantity of at least 1
       }
-      if (isNonNegInt(q) == false) {
-        isValidData = false;
+      if (isNonNegInt(q) == false) { // if quantity entered fails isNonNegInt function
+        isValidData = false; // then isValidData is now set at false, as the user probably entered invalid data (negative, not an integer, letters, etc)
       }
 
     }
-  }
+  } // Received help from Professor Port's office hours
   var qString = querystring.stringify(POST); // creates qString variable to string the query together
   if (isValidData == true && hasPurchases == true) { // if the quantity is a valid integer and the quantity is valid for purchase + add the valid amount to cart
-    request.session.cart[product_type] = POST;
-    //response.redirect("/login?" + qString); // then redirect the user to the login page with the qString path
-    qString += "&addedToCart=true";
-    console.log(request.session.cart);
+    request.session.cart[product_type] = POST; // then request the body of sessions cart data by product type
+    qString += "&addedToCart=true"; // add to qString a string in URL that identifies that something valid has been added to the cart (created & used to send alert that items have been added on page)
+    console.log(request.session.cart); // log the sessions cart into the console
   }
-  response.redirect(`${request.headers["referer"]}?` + qString); // everything else is assumed to be invalid data, redirecting the user to the products.html (shop) page along with the qString path
+  response.redirect(`${request.headers["referer"]}?` + qString); // redirects to same page with same qString when items are added
 });
 
 
 // Retrieved from Lab 14
-// CHacks to see if the file exists
+// Checks to see if the file exists
 if (fs.existsSync(user_info_file)) {
   var data = fs.readFileSync(user_info_file, 'utf-8');
   var userdata = JSON.parse(data);
@@ -344,10 +365,8 @@ if (fs.existsSync(user_info_file)) {
 
 app.use(myParser.urlencoded({ extended: true }));
 
-// add a route to get a cookie that may have been set here
 
-
-app.get("/login", function (request, response) {
+app.get("/login", function (request, response) { //created to display login page
   console.log(request.query); // print out q-str
   if (typeof request.cookies['username'] != 'undefined') {
     str = `Welcome ${request.cookies['username']}!`
@@ -361,11 +380,11 @@ app.get("/login", function (request, response) {
 <body>
     <form action="/login" method="POST">`
 
-    if (session.username != undefined) {
+    if (session.username != undefined) { // if sessions username is not undefined, send a UI personalized user message that lets them know their login was successful, the time & date they logged in, and tells them to go back to shop (if login link in navbar is clicked again after successfully logging in, this message will help prevent them from logging in more than once )
       str += `<h1>Hello ${session.username}! You logged in at ${session.last_login_time}<br><p style="color:red"> Please Go Back to Shop</p><br>_______________________________________</h1> `
     }
 
-    str += `<h1>Log In</h1>
+    str += `<h1>Log In</h1> <!--html that displays the login page-->
         <div class="container">
         <label for="username"><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="username"}> 
@@ -444,12 +463,11 @@ app.get("/login", function (request, response) {
 
 
 // Retrieved from Lab 14 with Professor Port's help
-app.post("/login", function (request, response) {
-  // Process login form POST and redirect to invoice page if ok, back to login page if not
+app.post("/login", function (request, response) { // POST to /login activated when login button is pressed
   console.log(request.body);
   console.log(quantity_str);
   var err_str = "";
-  var login_username = request.body.username;
+  var login_username = request.body.username; // sets login_username to whatever username was entered on page
   quantityQuery_str = querystring.stringify(quantity_str); // Strings query together and sets it to quantityQuery_str variable
 
   // Checks if username exists in reg data. if so, check if password is correct
@@ -457,42 +475,17 @@ app.post("/login", function (request, response) {
     var user_info = userdata[login_username]; // sets user_info variable to userdata username
     //checks if password stored for username matches what user typed in
     if (user_info["password"] != request.body["password"]) { // if password entered doesn't match whats stored
-      request.query.stickUsername = login_username;
+      request.query.stickUsername = login_username; // make the username stick so don't need to re-enter when they go back
       response.send("Sorry! Wrong password. Please go back and try again."); // Send error message to go back and try another password
     } else {
-      session.username = login_username;
-      var theDate = Date.now();
-      session.last_login_time = theDate;
-      response.send(`
+      session.username = login_username; // set the login_username variable to the sessions username
+      var theDate = Date.now(); // set theDate variable to current time
+      session.last_login_time = theDate; // sets sessions last log in time to data from theDate variable
+      response.send(` <!--send user a UI personalized message that they are logged in with date/time they logged in + links that lead the user back to shopping or back to cart-->
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
       <link rel="stylesheet" href="./product_style.css"> 
       <h2>${login_username} is logged in on ${theDate} <br><br>- Click <a href="./">here</a> to continue shopping<br>- Click <a href="./display_cart">here</a> to go back to cart</h2>
       `);
-
-      //sends an email to the users' email, retrieved from https://www.w3schools.com/nodejs/nodejs_email.asp
-      var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'beautifullydesigned808@gmail.com',
-          pass: 'password808'
-        }
-      });
-
-      var mailOptions = {
-        from: 'beautifullydesigned808@gmail.com',
-        to: userdata[username].email,
-        subject: 'Beautifully Designed : Thank you!',
-        text: 'Thank you for your order. Please shop with us again!'
-      };
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
-      return;
     }
 
   } else {
@@ -502,14 +495,14 @@ app.post("/login", function (request, response) {
 
 });
 
-app.post("/logout", function (request, response) {
-  request.session.destroy();
-  response.redirect('./')
+app.post("/logout", function (request, response) { // POST to /logout activated when logout button is pressed
+  request.session.destroy(); // when pressed, session is destroyed & cart is empty
+  response.redirect('./') // redirects user to home page
 });
 
 
 
-app.get("/register", function (request, response) {
+app.get("/register", function (request, response) { // created to generate registration page
   // Give a simple register form
   str = `
 
@@ -517,7 +510,7 @@ app.get("/register", function (request, response) {
 <form action="/register" method="POST">
 <div class="container">
     <h1>Register</h1>
-    <p>Please fill in this form to create an account.</p>
+    <p>Please fill in this form to create an account.</p> <!--html for registration page-->
     <hr>
 
     <label for="name"><b>Name</b></label>
@@ -658,10 +651,10 @@ app.post("/register", function (request, response) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
     <link rel="stylesheet" href="./product_style.css"> 
     <h2>New user ${username} registered<br>- Click <a href="./login">here</a> to log into your new account`);
-    response.redirect('./invoice'); // redirect user to their cart upon successful registration
+    response.redirect('./invoice'); // redirects user to their cart upon successful registration, requiring them to log in with new account info to gain access to purchase items in their cart
   } else {
-    response.end(JSON.stringify(errs)); // everything else,
-    console.log(errs)
+    response.end(JSON.stringify(errs)); // everything else, stringify errs
+    console.log(errs) // log errs into the console
   }
 });
 
