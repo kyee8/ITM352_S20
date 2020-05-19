@@ -186,7 +186,7 @@ app.get("/invoice", function (request, response, next) { //created to generate i
 
       str += `<h1>Your invoice was sent to ${userInfo['email']}</h1>`
       request.session.destroy(); // after invoice is sent, customer session is destroyed and cart is cleared
-
+      session.username = undefined; // session username becomes undefined, clearing UI messages
 
       response.send(str);
     }
@@ -497,6 +497,7 @@ app.post("/login", function (request, response) { // POST to /login activated wh
 
 app.post("/logout", function (request, response) { // POST to /logout activated when logout button is pressed
   request.session.destroy(); // when pressed, session is destroyed & cart is empty
+  session.username = undefined; // session username becomes undefined, clearing UI messages
   response.redirect('./') // redirects user to home page
 });
 
@@ -657,8 +658,6 @@ app.post("/register", function (request, response) {
     console.log(errs) // log errs into the console
   }
 });
-
-
 
 
 app.use(express.static('./public')); // sets up middleware, uses express and pulls files from public folder
